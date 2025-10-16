@@ -1,0 +1,26 @@
+name: Build OpenWrt for Amlogic
+
+on:
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build OpenWrt
+        uses: ophub/amlogic-s9xxx-openwrt@main
+        with:
+          openwrt_path: 'https://github.com/sbwml/builder/releases/download/v24.10.3/openwrt-24.10.3-armsr-armv8-generic-rootfs.tar.gz'
+          openwrt_board: 's905d'          # ← 改成你的设备型号，如 s905x3、s922x 等
+          openwrt_kernel: '6.1.y_5.15.y'
+          openwrt_size: '256/1024'
+          builder_name: 'Zhu'         # ← 改成你的名字（不要空格）
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: openwrt-firmware
+          path: out/
